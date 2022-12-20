@@ -1,6 +1,5 @@
 package io.itgen.ipldashboardservice.data;
 
-import io.itgen.ipldashboardservice.model.Match;
 import io.itgen.ipldashboardservice.model.Team;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -10,7 +9,6 @@ import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.listener.JobExecutionListenerSupport;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
