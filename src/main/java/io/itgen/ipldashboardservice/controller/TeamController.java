@@ -20,6 +20,11 @@ public class TeamController {
     @Autowired
     MatchRepository matchRepository;
 
+    @GetMapping("/team")
+    public Iterable<Team> getAllTeams() {
+        return temaRepository.findAll();
+    }
+
     @GetMapping("/team/{teamName}")
     public Team getTeam(@PathVariable String teamName) {
         Team team = temaRepository.findByTeamName(teamName);

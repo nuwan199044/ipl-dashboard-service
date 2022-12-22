@@ -24,7 +24,14 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.sql.DataSource;
 
 @Configuration
+@EnableBatchProcessing
 public class BatchConfig {
+
+    @Autowired
+    public JobBuilderFactory jobBuilderFactory;
+
+    @Autowired
+    public StepBuilderFactory stepBuilderFactory;
 
     private final String[] FIELD_NAMES = new String[]{
             "id", "city", "date", "player_of_match", "venue",
@@ -64,9 +71,9 @@ public class BatchConfig {
     }
 
     @Bean
-    public Job importUserJob(JobRepository jobRepository,
-                             JobCompletionNotificationListener listener, Step step1) {
-        return new JobBuilder("importUserJob", jobRepository)
+    public Job importUserJob(JobCompletionNotificationListener listener, Step step1) {
+        return jobBuilderFactory
+                .get("importUserJob")
                 .incrementer(new RunIdIncrementer())
                 .listener(listener)
                 .flow(step1)
@@ -75,10 +82,10 @@ public class BatchConfig {
     }
 
     @Bean
-    public Step step1(JobRepository jobRepository,
-                      PlatformTransactionManager transactionManager, JdbcBatchItemWriter<Match> writer) {
-        return new StepBuilder("step1", jobRepository)
-                .<MatchInput, Match> chunk(10, transactionManager)
+    public Step step1(JdbcBatchItemWriter<Match> writer) {
+        return stepBuilderFactory
+                .get("step1")
+                .<MatchInput, Match>chunk(10)
                 .reader(reader())
                 .processor(processor())
                 .writer(writer)
